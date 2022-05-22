@@ -9,8 +9,9 @@ nic="eth0"
 
 ntpd="127.0.0.1"
 
-ports=""
-#ports="179/tcp 5138/tcp 2379-2380/tcp 2375/tcp 8443/tcp 5000/tcp 6443/tcp 443/tcp 8000/tcp 9094/udp 8083/tcp 8089/tcp 8090/tcp 9090-9094/tcp 80/tcp 8080/tcp 9100/tcp 9093/tcp 53/tcp 53/udp 9253/tcp 9153/tcp 10249-10256/tcp 20000-40000/tcp "
+ports=""  #example: "179/tcp 5138/tcp 2379-2380/tcp 2375/tcp "
+
+repo="127.0.0.1"
 
 get-ip()
 {
@@ -63,6 +64,15 @@ function set-firewalld
   fi
 }
 
+function set-repo
+{
+  echo "[yum]" > /etc/yum.repos.d/ll.repo
+  echo "name=yum local" >> /etc/yum.repos.d/ll.repo
+  echo "baseurl=ftp://$repo/pub" >> /etc/yum.repos.d/ll.repo 
+  echo "enabled=1" >> /etc/yum.repos.d/ll.repo
+  echo "gpgcheck=0" >> /etc/yum.repos.d/ll.repo
+}
+
 function help()
 {
   echo -e "Commands:"
@@ -70,6 +80,7 @@ function help()
   echo -e "  set-ntpd             :\t(Setting): ntpd"
   echo -e "  set-charset          :\t(Setting): charset"
   echo -e "  set-firewalld        :\t(Setting): firewalld"
+  echo -e "  set-repo             :\t(Setting): repo"
 }
 
 case $1 in
@@ -84,6 +95,9 @@ case $1 in
     ;;
   "set-firewalld")
     set-firewalld $*
+    ;;
+  "set-repo")
+    set-repo $*
     ;;
   *)
   help
