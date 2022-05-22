@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/expect -f
 ###############################################
 ##
 ##  Copyright (2022, ) Huaqingcloud
@@ -96,6 +96,9 @@ function help()
 }
 
 case $1 in
+  "ssh-exec")
+    ssh-exec $*
+    ;;
   "set-zone")
     set-zone $*
     ;;
