@@ -6,12 +6,11 @@
 ###############################################
 
 nic="eth0"
-
 ntpd="127.0.0.1"
-
 ports=""  #example: "179/tcp 5138/tcp 2379-2380/tcp 2375/tcp "
-
 repo="127.0.0.1"
+kubeasz="/etc/kubeasz"
+prom=""
 
 get-ip()
 {
@@ -73,6 +72,17 @@ function set-repo
   echo "gpgcheck=0" >> /etc/yum.repos.d/ll.repo
 }
 
+function set-helm
+{
+  cp $kubeasz/bin/helm /usr/local/bin && chmod +x /usr/local/bin/helm
+}
+
+function set-prom
+{
+  kubectl create ns kube-monitor
+  helm install prometheus --namespace kube-monitor $prom
+}
+
 function help()
 {
   echo -e "Commands:"
@@ -81,6 +91,8 @@ function help()
   echo -e "  set-charset          :\t(Setting): charset"
   echo -e "  set-firewalld        :\t(Setting): firewalld"
   echo -e "  set-repo             :\t(Setting): repo"
+  echo -e "  set-helm             :\t(Setting): helm"
+  echo -e "  set-prom             :\t(Setting): prom"
 }
 
 case $1 in
@@ -98,6 +110,12 @@ case $1 in
     ;;
   "set-repo")
     set-repo $*
+    ;;
+  "set-helm")
+    set-helm $*
+    ;;
+  "set-prom")
+    set-prom $*
     ;;
   *)
   help
